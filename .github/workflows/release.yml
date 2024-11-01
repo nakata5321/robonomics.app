@@ -1,9 +1,8 @@
-name: github pages - dev version of dapp
+name: Update dapp on release
 
 on:
-  push:
-    branches:
-      - master
+  release:
+    types: [published]
 
 jobs:
   deploy:
@@ -46,9 +45,8 @@ jobs:
           VUE_APP_GIT_TAG: ${{ steps.tagger.outputs.tag }}
           VUE_APP_GIT_SHA: ${{ env.git_hash }}
 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+      - name: upload to crust
+        uses: crustio/ipfs-upload-action@v2.0.4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          cname: dev.robonomics.app
+          path: './dist'
+          seeds: ${{ secrets.CRUST_SEED }}
